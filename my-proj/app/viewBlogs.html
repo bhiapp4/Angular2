@@ -1,0 +1,71 @@
+<h2>Hello {{user.username}}</h2>
+<div class="row">
+    <div class="col-lg-6">
+        <div *ngIf="blogs.length == 0">
+            No Active blogs.
+            <button type="button" class="btn btn-primary" [routerLink]="['/addBlog']">Add Blog</button>
+        </div>
+        <h3 *ngIf="blogs.length != 0">
+            Total Blogs ({{blogs.length}})
+            Your Blogs ({{user.blogCount}})
+            <button type="button" class="btn btn-primary" [routerLink]="['/addBlog']">Add Blog</button>
+        </h3>
+    </div>
+</div><br/>
+
+<!--
+<div [ngGrid]="{'resizeable': false, 'margins': [5, 10]}">
+    <div *ngFor="let blog of blogs">
+        <div class="title">
+            <img src="{{blog.image}}">
+            {{blog.subject}}
+            {{blog.message}}
+            <button type="button" class="btn btn-link" (click)="setShowFlag(blog)">Show</button>
+        </div>
+       
+    </div>
+</div>
+-->
+    <form  [formGroup]="searchForm" novalidate name="searchForm" class="form-inline">
+        <div class="row">
+            <div class="form-group col-lg-6 col-md-6">
+                <label for="search">Search(user/subject)</label>
+                <input type="text" class="form-control"  style="width:410px" [formControl]="searchForm.controls['search']" #searchVar="ngForm" id="search">
+                <div class="alert alert-danger" *ngIf="searchVar.touched && searchVar.errors?.required">
+                    Search field is a required field
+                </div>
+              </div>
+            <div class="col-lg-6 col-md-6">
+                <button type="submit" class="btn btn-primary" [disabled]="!searchForm.valid" (click)="search()">Search</button>
+                <button type="submit" class="btn btn-primary" (click)="showAll()">ShowAll</button>   
+            </div>
+        </div>
+
+    </form> 
+     
+    <div class="media" *ngFor="let blog of blogs">
+        <div class="media-left">
+            <img class="media-object" src="{{blog.image}}">
+        </div>
+        <div class="media-body">
+            <h4 class="media-heading">{{blog.subject}}
+                <button type="button" class="btn btn-link" *ngIf="blog.blogRef != null" (click)="setShowFlag(blog)">{{blog.show ?'Hide Ref':'Show Ref'}}</button>
+                <button type="button" class="btn btn-link" *ngIf="blog.blogRef == null" [routerLink]="['/addBlog',blog.blogId]">Add Ref</button>
+            </h4>
+            <div>
+                {{blog.message}}
+            </div>
+            <!--<div *ngIf="blog.show">-->
+            <div *ngIf="blog.blogRef != null && blog.show" style="padding-top:8px">
+                <div class="media-left">
+                    <img class="media-object" src="{{blog.blogRef.image}}">
+               </div>
+                
+                <div class="media-body">
+                    <h4 class="media-heading">{{blog.blogRef.subject}}</h4>
+                    {{blog.blogRef.message}}
+                </div>
+            </div>
+        </div>
+    </div>
+   
